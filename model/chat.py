@@ -87,6 +87,7 @@ def process_image(text, image=None):
         processor = BlipImageEvalProcessor(224)
         image = processor(image.convert('RGB'))
         image = image.unsqueeze(0)
+        image = image.contiguous()
     return text, image_position, image
 
 
@@ -125,6 +126,8 @@ def chat(image_path, model, tokenizer,
         inputs = sum([input0, input1, input2], [])
         inputs = torch.tensor(tokenizer.build_inputs_with_special_tokens(inputs)).to(model.parameters().__next__().device)
         pre_image = len(input0)
+    
+    inputs = inputs.contiguous()
     # ---------------
     # Next, we manually set the format to keep flexibility.
     mask_position = len(inputs) - 2
@@ -133,6 +136,7 @@ def chat(image_path, model, tokenizer,
     seq = torch.cat(
         [inputs, torch.tensor([-1]*(max_length-len(inputs)), device=inputs.device)], dim=0
     )
+    seq = seq.contiguous()
     # ---------------
     # from sat.generation.sampling_strategies import BeamSearchStrategy
     # strategy = BeamSearchStrategy(num_beams, length_penalty=1., prefer_min_length=5, end_tokens=[tokenizer.eos_token_id], consider_end=True, no_repeat_ngram_size=5, stop_n_iter_unchanged=30, temperature=temperature, top_p=top_p, top_k=60, repetition_penalty=1.1)

@@ -22,13 +22,14 @@ def main():
     parser.add_argument("--english", action='store_true', help='only output English')
     parser.add_argument("--quant", choices=[8, 4], type=int, default=None, help='quantization bits')
     parser.add_argument("--from_pretrained", type=str, default="visualglm-6b", help='pretrained ckpt')
-    parser.add_argument("--prompt_zh", type=str, default="描述这张图片。", help='Chinese prompt for the first round')
+    parser.add_argument("--prompt_zh", type=str, default='详细描述这张胸部X光片的诊断结果', help='Chinese prompt for the first round')
     parser.add_argument("--prompt_en", type=str, default="Describe the image.", help='English prompt for the first round')
     args = parser.parse_args()
 
     # load model
     model, model_args = AutoModel.from_pretrained(
-        args.from_pretrained,
+        # args.from_pretrained,
+        "/mnt/d/MultiModalityMed/XrayGLM/checkpoints",
         args=argparse.Namespace(
         fp16=True,
         skip_init=True,
@@ -39,9 +40,6 @@ def main():
 
     if args.quant:
         quantize(model.transformer, args.quant)
-    
-    #if torch.cuda.is_available():
-    #    model = model.cuda()
 
     model.add_mixin('auto-regressive', CachedAutoregressiveMixin())
 

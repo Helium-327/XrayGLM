@@ -1,7 +1,16 @@
-SwissArmyTransformer>=0.3.6
-torch>1.10.0
-torchvision
-transformers>=4.27.1
-mdtex2html
-gradio
+Requests==2.32.3
+numpy==1.24.3
+torch==1.13.1
+triton==2.0.0
+torchvision==0.14.1
+transformers==4.27.1
+SwissArmyTransformer==0.4.0 #把这个库降级一下
+
+wandb
+scipy
+openai==1.82.0
+Pillow==11.2.1
 bitsandbytes==0.39.0
+tqdm==4.67.1
+mdtex2html
+gradio==5.24.0

@@ -63,8 +63,10 @@ class BLIP2(torch.nn.Module):
 
     def forward(self, image, **kwargs):
         enc = self.vit(image)[0]
-        out = self.qformer(enc)[0]
-        return self.glm_proj(out)
+        enc = enc.contiguous()
+        out = self.qformer(enc)[0].contiguous()
+        
+        return self.glm_proj(out).contiguous()
     
 class BlipImageBaseProcessor():
     def __init__(self, mean=None, std=None):
